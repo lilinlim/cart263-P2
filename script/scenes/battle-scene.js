@@ -9,6 +9,7 @@ import Phaser from "../library/phaser.js";
 import {SCENE_KEYS} from "./scene-keys.js";
 
 export class BattleScene extends Phaser.Scene {
+    /** @type {BattleMenu} */
     #battleMenu;
 
     constructor() {
