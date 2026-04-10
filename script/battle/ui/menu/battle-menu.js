@@ -1,6 +1,8 @@
 import Phaser from '../../../library/phaser.js';
 import { MONSTER_ASSET_KEYS } from "../../../assets/asset-keys.js";
+import { DIRECTION } from '../../../common/direction.js';
 
+//battle menu options
 const BATTLE_MENU_OPTIONS = Object.freeze({
     FIGHT: 'FIGHT',
     SWITCH: 'SWITCH',
@@ -8,6 +10,7 @@ const BATTLE_MENU_OPTIONS = Object.freeze({
     FLEE: 'FLEE',
 });
 
+//text style for battle ui
 const battleUiTextStyle = {
     color: 'black',
     fontSize: '30px',
@@ -55,6 +58,23 @@ export class BattleMenu {
 
     hideMonsterAttackSubMenu(){
         this.#moveSelectionSubBattleMenuPhaserContainerGameObject.setAlpha(0);
+    }
+
+    /**
+     * 
+     * @param {import('../../../common/direction.js').Direction | 'OK' | 'CANCEL'} input
+     */
+    handlePlayerInput(input){
+        console.log(input);
+        if(input === 'CANCEL'){
+            this.hideMonsterAttackSubMenu();
+            this.showMainBattleMenu();
+            return;
+        }
+        if (input === 'OK'){
+            this.hideMainBattleMenu();
+            this.showMonsterAttackSubMenu();
+        }
     }
 
     #createMainBattleMenu(){
