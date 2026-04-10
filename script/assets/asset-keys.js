@@ -1,3 +1,5 @@
+//file to name identify and name assets
+
 export const BATTLE_BACKGROUND_ASSET_KEYS = Object.freeze({
     FOREST: "FOREST",
 });
@@ -15,4 +17,8 @@ export const HEALTH_BAR_ASSET_KEYS = Object.freeze({
     LEFT_CAP: "LEFT_CAP",
     RIGHT_CAP: "RIGHT_CAP",
     MIDDLE: "MIDDLE",
+});
+
+export const UI_ASSET_KEYS = Object.freeze({
+    CURSOR: "CURSOR",
 });

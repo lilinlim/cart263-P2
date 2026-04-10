@@ -3,6 +3,7 @@ import {
     BATTLE_BACKGROUND_ASSET_KEYS ,
     HEALTH_BAR_ASSET_KEYS,
     MONSTER_ASSET_KEYS,
+    UI_ASSET_KEYS,
 } from "../assets/asset-keys.js";
 import Phaser from "../library/phaser.js";
 import {SCENE_KEYS} from "./scene-keys.js";
@@ -19,7 +20,9 @@ export class PreloadScene extends Phaser.Scene {
     //lifecycle events
     //init() {console.log("init");}
 
+    //preloading images
     preload() {
+        //console.log("preload");
         console.log(`[${PreloadScene.name}:preload] invoked`);
 
         const monsterTamerAssetPath = "assets/images/monster-tamer";
@@ -61,7 +64,11 @@ export class PreloadScene extends Phaser.Scene {
             `${monsterTamerAssetPath}/monsters/iguanignite.png`
         );
 
-       //console.log("preload");
+        //ui assets
+        this.load.image(
+            UI_ASSET_KEYS.CURSOR, 
+            `${monsterTamerAssetPath}/ui/cursor.png`
+        );
     }
 
     create() {
