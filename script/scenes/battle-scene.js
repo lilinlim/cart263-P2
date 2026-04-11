@@ -98,7 +98,17 @@ export class BattleScene extends Phaser.Scene {
         const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space);
         if(wasSpaceKeyPressed){
             this.#battleMenu.handlePlayerInput('OK');
-            return;
+
+            //check if player selected attack, update text
+            if(this.#battleMenu.selectedAttack === undefined){
+                return;
+            }
+            console.log(`Player selected this following move: ${this.#battleMenu.selectedAttack}`);
+            this.#battleMenu.hideMonsterAttackSubMenu();
+            this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(['Your monster attacked the enemy'], () => {
+                this.#battleMenu.showMainBattleMenu();
+            });
+            
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)){
