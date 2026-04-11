@@ -1,9 +1,11 @@
 import { 
     BATTLE_ASSET_KEYS,
-    BATTLE_BACKGROUND_ASSET_KEYS,
-    HEALTH_BAR_ASSET_KEYS,
+    //BATTLE_BACKGROUND_ASSET_KEYS,
+    //HEALTH_BAR_ASSET_KEYS,
     MONSTER_ASSET_KEYS,
 } from "../assets/asset-keys.js";
+import { Background } from "../battle/background.js";
+import { HealthBar } from "../battle/ui/health-bar.js";
 import { BattleMenu } from '../battle/ui/menu/battle-menu.js';
 import { DIRECTION } from "../common/direction.js";
 import Phaser from "../library/phaser.js";
@@ -25,7 +27,8 @@ export class BattleScene extends Phaser.Scene {
         console.log(`[${BattleScene.name}:create] invoked`);
 
         //create main background
-        this.add.image(0, 0, BATTLE_BACKGROUND_ASSET_KEYS.FOREST).setOrigin(0);
+        const background = new Background(this);
+        background.showForest();
 
         //render player + enemy
         this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0);
@@ -43,7 +46,7 @@ export class BattleScene extends Phaser.Scene {
             this.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
             .setOrigin(0),
             playerMonsterName,
-            this.#createHealth(34, 37),
+            new HealthBar(this, 34, 37).container,
             this.add.text(playerMonsterName.width + 35, 22, "L5", {
                 color: "#ED474B",
                 fontSize: "28px",
@@ -72,7 +75,7 @@ export class BattleScene extends Phaser.Scene {
             this.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
             .setOrigin(0).setScale(1, 0.8),
             enemyMonsterName,
-            this.#createHealth(34, 37),
+            new HealthBar(this, 34, 37).container,
             this.add.text(enemyMonsterName.width + 35, 22, "L5", {
                 color: "#ED474B",
                 fontSize: "28px",
@@ -133,30 +136,6 @@ export class BattleScene extends Phaser.Scene {
         if(selectedDirection !== DIRECTION.NONE) {
             this.#battleMenu.handlePlayerInput(selectedDirection);
         }
-    }
-
-    /**
-     * 
-     * @param {number} x the x pos to place health bar
-     * @param {number} y the y pos to place health bar
-     * @returns {Phaser.GameObjects.Container}
-     */
-    //health bar
-    #createHealth(x, y){
-        const scaleY = 0.7;
-        const leftCap = this.add
-        .image(x, y, HEALTH_BAR_ASSET_KEYS.LEFT_CAP)
-        .setOrigin(0, 0.5).setScale(1, scaleY);
-        const middle = this.add.image(
-            leftCap.x + leftCap.width, 
-            y, 
-            HEALTH_BAR_ASSET_KEYS.MIDDLE)
-            .setOrigin(0, 0.5).setScale(1, scaleY);
-            middle.displayWidth = 360; //stretching middle
-        const rightCap = this.add.image(
-            middle.x + middle.displayWidth, y, HEALTH_BAR_ASSET_KEYS.RIGHT_CAP)
-            .setOrigin(0, 0.5).setScale(1, scaleY);
-        return this.add.container(x, y, [leftCap, middle, rightCap]);
     }
 
 }
