@@ -6,18 +6,19 @@ import {
     MONSTER_ASSET_KEYS,
 } from "../assets/asset-keys.js";
 import { Background } from "../battle/background.js";
-import { BattleMonster } from "../battle/monsters/battle-monster.js";
 import { HealthBar } from "../battle/ui/health-bar.js";
 import { BattleMenu } from '../battle/ui/menu/battle-menu.js';
 import { DIRECTION } from "../common/direction.js";
 import {SCENE_KEYS} from "./scene-keys.js";
+//import { BattleMonster } from "../battle/monsters/battle-monster.js";
+import { EnemyBattleMonster } from "../battle/monsters/enemy-battle-monsters.js";
 
 export class BattleScene extends Phaser.Scene {
     /** @type {BattleMenu} */ //these are types of comments that help knowing what kind of content is what
     #battleMenu;
     /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
     #cursorKeys;
-    /** @type {BattleMonster} */
+    /** @type {EnemyBattleMonsterBattleMonster} */
     #activeEnemyMonster;
 
     constructor() {
@@ -34,7 +35,7 @@ export class BattleScene extends Phaser.Scene {
         background.showForest();
 
         //render player + enemy
-        this.#activeEnemyMonster = new BattleMonster({
+        this.#activeEnemyMonster = new EnemyBattleMonster({
             scene: this,
             monsterDetails: {
                 name: MONSTER_ASSET_KEYS.CARNODUSK,
@@ -45,7 +46,7 @@ export class BattleScene extends Phaser.Scene {
                 attackIds: [],
                 baseAttack: 5,
             },
-        }, {x: 768, y: 144,})
+        });
         //this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0);
         this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0).setFlipX(true);
 
@@ -117,6 +118,10 @@ export class BattleScene extends Phaser.Scene {
                 console.log('animation completed');
             },
         });
+
+        //testing enemy hp bar
+        this.#activeEnemyMonster.takeDamage(10);
+        console.log(this.#activeEnemyMonster.isFainted);
     }
 
     //calls every frame
