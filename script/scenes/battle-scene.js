@@ -1,3 +1,4 @@
+import Phaser from "../library/phaser.js";
 import { 
     BATTLE_ASSET_KEYS,
     //BATTLE_BACKGROUND_ASSET_KEYS,
@@ -5,10 +6,10 @@ import {
     MONSTER_ASSET_KEYS,
 } from "../assets/asset-keys.js";
 import { Background } from "../battle/background.js";
+import { BattleMonster } from "../battle/monsters/battle-monster.js";
 import { HealthBar } from "../battle/ui/health-bar.js";
 import { BattleMenu } from '../battle/ui/menu/battle-menu.js';
 import { DIRECTION } from "../common/direction.js";
-import Phaser from "../library/phaser.js";
 import {SCENE_KEYS} from "./scene-keys.js";
 
 export class BattleScene extends Phaser.Scene {
@@ -16,6 +17,8 @@ export class BattleScene extends Phaser.Scene {
     #battleMenu;
     /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
     #cursorKeys;
+    /** @type {BattleMonster} */
+    #activeEnemyMonster;
 
     constructor() {
         super({
@@ -31,7 +34,19 @@ export class BattleScene extends Phaser.Scene {
         background.showForest();
 
         //render player + enemy
-        this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0);
+        this.#activeEnemyMonster = new BattleMonster({
+            scene: this,
+            monsterDetails: {
+                name: MONSTER_ASSET_KEYS.CARNODUSK,
+                assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
+                assetFrame: 0,
+                currentHp: 25,
+                maxHp: 25,
+                attackIds: [],
+                baseAttack: 5,
+            },
+        }, {x: 768, y: 144,})
+        //this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0);
         this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0).setFlipX(true);
 
         //render player health bar
@@ -65,7 +80,8 @@ export class BattleScene extends Phaser.Scene {
         ]);
 
         //render enemy health bar
-        const enemyHealthBar = new HealthBar(this, 34, 37);
+        //const enemyHealthBar = new HealthBar(this, 34, 37);
+        const enemyHealthBar = this.#activeEnemyMonster._healthBar;
         const enemyMonsterName = this.add.text(30, 20, 
             MONSTER_ASSET_KEYS.CARNODUSK, {
                 color: "#7E3D3F",
@@ -99,8 +115,8 @@ export class BattleScene extends Phaser.Scene {
             duration: 3000,
             callback: () => {
                 console.log('animation completed');
-            }
-        })
+            },
+        });
     }
 
     //calls every frame
