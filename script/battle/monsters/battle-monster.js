@@ -1,3 +1,4 @@
+import { BATTLE_ASSET_KEYS } from "../../assets/asset-keys.js";
 import { HealthBar } from "../ui/health-bar.js";
 
 export class BattleMonster{
@@ -15,6 +16,8 @@ export class BattleMonster{
     _maxHealth;
     /** @protected @type {import("../../types/typedef.js").Attack} */
     _monsterAttacks;
+    /** @protected @type {Phaser.GameObjects.Container} */
+    _phaserHealthBarGameContainer;
 
     /**
      * @param {import("../../types/typedef.js").BattleMonsterConfig} config 
@@ -27,10 +30,10 @@ export class BattleMonster{
         this._maxHealth = this._monsterDetails.maxHp;
         this._monsterAttacks = [];
 
-        this._healthBar = new HealthBar(this._scene, 34, 37);
         this._phaserGameObject = this._scene.add.image(
             position.x, position.y, this._monsterDetails.assetKey, this._monsterDetails.assetFrame || 0
         );
+        this.#createHealthBarComponents(config.scaleHealthBarBackgroundImageByY);
     }
 
     /** @type {boolean} */
@@ -53,6 +56,11 @@ export class BattleMonster{
         return this._monsterDetails.baseAttack;
     }
 
+    /** @type {number} */
+    get level(){
+        return this._monsterDetails.currentLevel;
+    }
+
     /**
      * 
      * @param {number} damage 
@@ -62,8 +70,43 @@ export class BattleMonster{
         //update current monster health and animate hp bar
         this._currentHealth -= damage;
         if(this._currentHealth < 0){
-            this._currrentHealth = 0;
+            this._currentHealth = 0;
         }
         this._healthBar.setMeterPercentageAnimated(this._currentHealth / this._maxHealth, {callback});
+    }
+
+    #createHealthBarComponents(scaleHealthBarBackgroundImageByY = 1){
+        this._healthBar = new HealthBar(this._scene, 34, 37);
+
+        //const enemyHealthBar = this.#activeEnemyMonster._healthBar;
+        const monsterNameGameText = this._scene.add.text(30, 20, 
+            this.name, {
+                color: "#7E3D3F",
+                fontSize: "32px",
+            }
+        );
+
+        const healthBarBgImage = this._scene.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
+        .setOrigin(0).setScale(1, scaleHealthBarBackgroundImageByY)
+
+        const monsterHealthBarLevelText = this._scene.add.text(monsterNameGameText.width + 35, 22, `L${this.level}`, {
+            color: "#ED474B",
+            fontSize: "28px",
+        });
+
+        const monsterHpText = this._scene.add.text(30, 55, "HP", {
+            color: "#FF6505",
+            fontSize: "24px",
+            fontStyle: "italic",
+        });
+
+        //container for enemy health
+        this._phaserHealthBarGameContainer = this._scene.add.container(0, 0, [
+            healthBarBgImage,
+            monsterNameGameText,
+            this._healthBar.container,
+            monsterHealthBarLevelText,
+            monsterHpText,
+        ]);
     }
 }

@@ -5,14 +5,16 @@ import Phaser from "../library/phaser";
  * @type {Object}
  * @property {Phaser.Scene} scene
  * @property {Monster} monsterDetails
+ * @property {number} [scaleHealthBarBackgroundImageByY=1]
  */
 
 /**
  * @typedef Monster
  * @type {Object}
- * @property {} name
+ * @property {string} name
  * @property {string} assetKey
  * @property {number} [assetFrame=0]
+ * @property {number} currentLevel
  * @property {number} maxHp
  * @property {number} currentHp
  * @property {number} baseAttack
