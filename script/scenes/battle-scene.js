@@ -23,11 +23,17 @@ export class BattleScene extends Phaser.Scene {
     #activeEnemyMonster;
     /** @type {PlayerBattleMonster} */
     #activePlayerMonster;
+    /** @type {number} */
+    #activePlayerAttackIndex;
 
     constructor() {
         super({
             key: SCENE_KEYS.BATTLE_SCENE,
         });
+    }
+
+    init(){
+        this.#activePlayerAttackIndex = -1;
     }
 
     create() {
@@ -46,7 +52,7 @@ export class BattleScene extends Phaser.Scene {
                 assetFrame: 0,
                 currentHp: 25,
                 maxHp: 25,
-                attackIds: [],
+                attackIds: [1],
                 baseAttack: 5,
                 currentLevel: 5,
             },
@@ -60,23 +66,19 @@ export class BattleScene extends Phaser.Scene {
                 assetFrame: 0,
                 currentHp: 25,
                 maxHp: 25,
-                attackIds: [],
+                attackIds: [2],
                 baseAttack: 5,
                 currentLevel: 5,
             },
         });
 
         //render out the main + sub info panes
-        this.#battleMenu = new BattleMenu(this);
+        this.#battleMenu = new BattleMenu(this, this.#activePlayerMonster);
         this.#battleMenu.showMainBattleMenu();
 
         //for keyboard
         this.#cursorKeys = this.input.keyboard.createCursorKeys();
 
-        //testing enemy hp bar
-        this.#activeEnemyMonster.takeDamage(20, () => {
-            this.#activePlayerMonster.takeDamage(15);
-        });
         //console.log(this.#activeEnemyMonster.isFainted);
     }
 
@@ -91,11 +93,17 @@ export class BattleScene extends Phaser.Scene {
             if(this.#battleMenu.selectedAttack === undefined){
                 return;
             }
+            
+            this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack;
+
+            if(!this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex]){
+                return;
+            }
+
             console.log(`Player selected this following move: ${this.#battleMenu.selectedAttack}`);
+
             this.#battleMenu.hideMonsterAttackSubMenu();
-            this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(['Your monster attacked the enemy'], () => {
-                this.#battleMenu.showMainBattleMenu();
-            });
+            this.#handleBattleSequence();
             
         }
 
@@ -123,4 +131,34 @@ export class BattleScene extends Phaser.Scene {
         }
     }
 
+    #handleBattleSequence(){
+        //general battle flow
+        //show attack used -> brief pause
+        //play attack anim -> brief pause
+        //play damage anim -> brief pause
+        //play hp anim -> brief pause
+        //repeat steps for other monster
+
+        this.#playerAttack();
+    }
+
+    #playerAttack(){
+        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`${this.#activePlayerMonster.name} used ${this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex].name}`], () => {
+            this.time.delayedCall(500, () => {
+                this.#activeEnemyMonster.takeDamage(20, () => {
+                    this.#enemyAttack();
+                });
+            })
+        })
+    }
+
+    #enemyAttack(){
+        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([` for${this.#activeEnemyMonster.name} used ${this.#activeEnemyMonster.attacks[0].name}`], () => {
+            this.time.delayedCall(500, () => {
+                this.#activePlayerMonster.takeDamage(20, () => {
+                    this.#battleMenu.showMainBattleMenu();
+                });
+            })
+        })
+    }
 }
