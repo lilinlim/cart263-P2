@@ -13,6 +13,7 @@ import {SCENE_KEYS} from "./scene-keys.js";
 //import { BattleMonster } from "../battle/monsters/battle-monster.js";
 import { EnemyBattleMonster } from "../battle/monsters/enemy-battle-monster.js";
 import { PlayerBattleMonster } from "../battle/monsters/player-battle-monster.js";
+import { StateMachine } from "../utils/state-machine.js";
 
 export class BattleScene extends Phaser.Scene {
     /** @type {BattleMenu} */ //these are types of comments that help knowing what kind of content is what
@@ -25,6 +26,8 @@ export class BattleScene extends Phaser.Scene {
     #activePlayerMonster;
     /** @type {number} */
     #activePlayerAttackIndex;
+    /** @type {StateMachine} */
+    #battleStateMachine;
 
     constructor() {
         super({
@@ -75,6 +78,21 @@ export class BattleScene extends Phaser.Scene {
         //render out the main + sub info panes
         this.#battleMenu = new BattleMenu(this, this.#activePlayerMonster);
         this.#battleMenu.showMainBattleMenu();
+
+        this.#battleStateMachine = new StateMachine('battle', this);
+        this.#battleStateMachine.addState({
+            name: 'INTRO',
+            onEnter: () => {
+                this.time.delayedCall(1000, () => {
+                    this.#battleStateMachine.setState('BATTLE');
+                });
+            },
+        });
+
+        this.#battleStateMachine.addState({
+            name: 'BATTLE',
+        });
+        this.#battleStateMachine.setState('INTRO');
 
         //for keyboard
         this.#cursorKeys = this.input.keyboard.createCursorKeys();
