@@ -1,4 +1,5 @@
-import { BATTLE_ASSET_KEYS, DATA_ASSET_KEYS } from "../../assets/asset-keys.js";
+import { BATTLE_ASSET_KEYS} from "../../assets/asset-keys.js";
+import { DataUtils } from "../../utils/data-utils.js";
 import { HealthBar } from "../ui/health-bar.js";
 
 export class BattleMonster{
@@ -38,11 +39,8 @@ export class BattleMonster{
         );
         this.#createHealthBarComponents(config.scaleHealthBarBackgroundImageByY);
 
-        /** @type {import('../../types/typedef.js').Attack[]} */
-        const data = this._scene.cache.json.get(DATA_ASSET_KEYS.ATTACKS);
-
         this._monsterDetails.attackIds.forEach((attackId) => {
-            const monsterAttack = data.find((attack) => attack.id === attackId);
+            const monsterAttack = DataUtils.getMonsterAttack(this._scene, attackId);
             if(monsterAttack !== undefined){
                 this._monsterAttacks.push(monsterAttack);
             }
@@ -50,7 +48,7 @@ export class BattleMonster{
     }
 
     /** @type {boolean} */
-    get ifFainted(){
+    get isFainted(){
         return this._currentHealth <= 0;
     }
 
