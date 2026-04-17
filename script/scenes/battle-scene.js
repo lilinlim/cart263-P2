@@ -66,13 +66,22 @@ export class BattleScene extends Phaser.Scene {
             monsterDetails: {
                 name: MONSTER_ASSET_KEYS.CARNODUSK,
                 assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
-                assetFrame: 0,
+                assetFrame: 22,
                 currentHp: 25,
                 maxHp: 25,
                 attackIds: [1],
                 baseAttack: 5,
                 currentLevel: 5,
             },
+        });
+        this.anims.create({
+            key: `attackerPetAnim`,
+             frames: this.anims.generateFrameNumbers(MONSTER_ASSET_KEYS.CARNODUSK, {
+                start: 22,
+                end: 24,
+            }),
+            frameRate:5,
+            repeat:-1,
         });
 
         //stats for player
@@ -81,7 +90,13 @@ export class BattleScene extends Phaser.Scene {
             monsterDetails: {
                 name: MONSTER_ASSET_KEYS.IGUANIGNITE,
                 assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
-                assetFrame: 0,
+                // assetFrame: 0,
+                // frames: this.anims.generateFrameNumbers(`MONSTER_ASSET_KEYS.IGUANIGNITE`, {
+                // start:20,
+                // end: 24,
+                // }),
+                // frameRate:10,
+                // repeat:-1
                 currentHp: 25,
                 maxHp: 25,
                 attackIds: [2],
@@ -89,6 +104,18 @@ export class BattleScene extends Phaser.Scene {
                 currentLevel: 5,
             },
         });
+        //animation 
+        this.anims.create({
+            key: `playerPetAnim`,
+             frames: this.anims.generateFrameNumbers(MONSTER_ASSET_KEYS.IGUANIGNITE, {
+                start: 21,
+                end: 22,
+            }),
+            frameRate:5,
+            repeat:-1,
+        });
+        
+        
 
         //render out the main + sub info panes
         this.#battleMenu = new BattleMenu(this, this.#activePlayerMonster);
@@ -97,6 +124,7 @@ export class BattleScene extends Phaser.Scene {
         //for keyboard
         this.#cursorKeys = this.input.keyboard.createCursorKeys();
 
+        this.#activePlayerMonster.playAnimation();
         //console.log(this.#activeEnemyMonster.isFainted);
     }
 

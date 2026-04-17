@@ -9,7 +9,7 @@ export class BattleMonster{
     _monsterDetails;
     /** @protected @type {HealthBar} */
     _healthBar;
-    /** @protected @type {Phaser.GameObjects.Image} */
+    /** @protected @type {Phaser.GameObjects.Sprite |Phaser.GameObjects.Image} */ //Phaser.GameObjects.Image | | undefined
     _phaserGameObject;
     /** @protected @type {number} */
     _currentHealth;
@@ -31,12 +31,22 @@ export class BattleMonster{
         this._maxHealth = this._monsterDetails.maxHp;
         this._monsterAttacks = [];
 
-        this._phaserGameObject = this._scene.add.image(
+        this._phaserGameObject = this._scene.add.sprite(
             position.x, 
             position.y, 
             this._monsterDetails.assetKey, 
-            this._monsterDetails.assetFrame || 0
-        );
+            //idk bout this: this._monsterDetails.assetFrame || 20 
+            )
+            // .setScale(4)
+            ;
+        
+
+        // this._phaserGameObject = this._scene.add.image(
+        //     position.x, 
+        //     position.y, 
+        //     this._monsterDetails.assetKey, 
+        //     this._monsterDetails.assetFrame || 0
+        // );
         this.#createHealthBarComponents(config.scaleHealthBarBackgroundImageByY);
 
         this._monsterDetails.attackIds.forEach((attackId) => {
@@ -46,6 +56,16 @@ export class BattleMonster{
             }
         });
     }
+
+// /**
+//  * @param {() => void} callback
+//  * @returns {void}
+//  */
+
+playAnimation() {
+    this._phaserGameObject.play(`attackerPetAnim`);
+    this._phaserGameObject.play(`playerPetAnim`);
+}
 
     /** @type {boolean} */
     get isFainted(){

@@ -32,7 +32,7 @@ export class PreloadScene extends Phaser.Scene {
         //battle backgrounds
         this.load.image(
             BATTLE_BACKGROUND_ASSET_KEYS.FOREST, 
-            `${monsterTamerAssetPath}/battle-backgrounds/forest-background.png`
+            `${monsterTamerAssetPath}/battle-backgrounds/forest-background2.png`
         );
 
         //battle assets
@@ -70,14 +70,26 @@ export class PreloadScene extends Phaser.Scene {
         );
 
         //monster assets
-        this.load.image(
+        this.load.spritesheet(
             MONSTER_ASSET_KEYS.CARNODUSK, 
-            `${monsterTamerAssetPath}/monsters/carnodusk.png`
+            `${monsterTamerAssetPath}/monsters/babyegg_water_emo.png`,{
+                frameWidth: 320,
+                frameHeight:320,
+                endFrame: 56,
+            }
         );
-        this.load.image(
+        this.load.spritesheet(
             MONSTER_ASSET_KEYS.IGUANIGNITE, 
-            `${monsterTamerAssetPath}/monsters/iguanignite.png`
+            `${monsterTamerAssetPath}/monsters/babyKittyegg_emoG.png`,{
+                frameWidth: 320,
+                frameHeight:320,
+                endFrame: 57,
+            }
         );
+        // this.load.image(
+        //     MONSTER_ASSET_KEYS.IGUANIGNITE, 
+        //     `${monsterTamerAssetPath}/monsters/iguanignite.png`
+        // );
 
         //ui assets
         this.load.image(

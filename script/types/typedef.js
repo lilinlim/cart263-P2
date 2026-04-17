@@ -13,7 +13,7 @@ import Phaser from "../library/phaser";
  * @type {Object}
  * @property {string} name
  * @property {string} assetKey
- * @property {number} [assetFrame=0]
+ * @property {number} [assetFrame=60] //[assetFrame=0]
  * @property {number} currentLevel
  * @property {number} maxHp
  * @property {number} currentHp
